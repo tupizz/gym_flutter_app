@@ -6,7 +6,7 @@ void main() => runApp(MyApp());
 
 TextTheme buildTextTheme() {
   return TextTheme(
-    title: TextStyle(fontFamily: 'Barlow', fontWeight: FontWeight.bold),
+    title: TextStyle(),
     body1: TextStyle(
       fontFamily: 'Quicksand',
     ),
