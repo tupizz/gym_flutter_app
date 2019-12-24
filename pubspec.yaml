@@ -1,0 +1,43 @@
+name: gym_app
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Barlow
+      fonts:
+        - asset: assets/fonts/Barlow/Barlow-Regular.ttf
+        - asset: assets/fonts/Barlow/Barlow-SemiBold.ttf
+          weight: 800
+        - asset: assets/fonts/Barlow/Barlow-Medium.ttf
+          weight: 700
+        - asset: assets/fonts/Barlow/Barlow-Light.ttf
+          weight: 200
+    - family: Quicksand
+      fonts:
+        - asset: assets/fonts/Quicksand/Quicksand-Regular.ttf
+        - asset: assets/fonts/Quicksand/Quicksand-Bold.ttf
+          weight: 800
+        - asset: assets/fonts/Quicksand/Quicksand-Light.ttf
+          weight: 200
+    - family: Playfair
+      fonts:
+        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-Regular.ttf
+        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-Bold.ttf
+          weight: 800
