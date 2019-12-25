@@ -5,6 +5,8 @@ class Workout {
   final String name;
   final int duration;
   final String imageUrl;
+  final int daysPerWeek;
+  final String type;
   final String description;
   final bool isFavorite;
 
@@ -14,6 +16,8 @@ class Workout {
     @required this.duration,
     @required this.imageUrl,
     @required this.description,
+    @required this.daysPerWeek,
+    @required this.type,
     this.isFavorite,
   });
 }

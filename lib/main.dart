@@ -14,13 +14,13 @@ TextTheme buildTextTheme() {
 }
 
 ThemeData buildDarkThemeData() {
-  final baseTheme = ThemeData.dark();
+  final baseTheme = ThemeData.light();
 
   return baseTheme.copyWith(
-    // https://colorhunt.co/palette/43636
-    primaryColor: ColorUtils.hexToColor('#ff7844'),
-    textTheme: buildTextTheme(),
-  );
+      // https://colorhunt.co/palette/43636
+      primaryColor: ColorUtils.hexToColor('#cc2936'),
+      textTheme: buildTextTheme(),
+      scaffoldBackgroundColor: ColorUtils.hexToColor('#4E598C'));
 }
 
 class MyApp extends StatelessWidget {
