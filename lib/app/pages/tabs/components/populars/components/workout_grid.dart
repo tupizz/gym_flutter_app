@@ -4,7 +4,7 @@ import 'package:gym_app/app/models/workout.dart';
 import './workout_item.dart';
 
 class WorkoutGrid extends StatelessWidget {
-  var workouts = [
+  final workouts = [
     Workout(
       id: '1d85cfd1-35fa-425a-b939-56525f9c9f3f',
       name: '3 Day Workout Routine and Diet for Beginners',

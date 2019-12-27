@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import './app/pages/home/home_page.dart';
+
 import './app/shared/utils/colors_utils.dart';
+import './app/pages/tabs/tabs_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,14 +14,15 @@ TextTheme buildTextTheme() {
   );
 }
 
+// https://colorhunt.co/palette/158462
 ThemeData buildDarkThemeData() {
   final baseTheme = ThemeData.light();
 
   return baseTheme.copyWith(
-      // https://colorhunt.co/palette/43636
-      primaryColor: ColorUtils.hexToColor('#cc2936'),
+      primaryColor: ColorUtils.hexToColor('#fa163f'),
+      primaryColorDark: ColorUtils.hexToColor('#ff4d00'),
       textTheme: buildTextTheme(),
-      scaffoldBackgroundColor: ColorUtils.hexToColor('#4E598C'));
+      scaffoldBackgroundColor: ColorUtils.hexToColor('#fafafa'));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: buildDarkThemeData(),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => HomePage(),
+        '/': (ctx) => TabPage(),
       },
     );
   }
