@@ -15,6 +15,7 @@ class TabPage extends StatefulWidget {
 
 class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   TabController controller;
+  bool isSearchActive = false;
 
   @override
   void initState() {
@@ -44,7 +45,35 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
             ],
           ),
           child: GradientAppBar(
-            title: Text("Home"),
+            title: AnimatedSwitcher(
+              child: isSearchActive
+                  ? TextField(
+                      decoration: InputDecoration(
+                          
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24),
+                            borderSide: BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.only(left: 16, right: 8),
+                          hintText: 'Enter a search term'),
+                    )
+                  : Text('Home'),
+              duration: Duration(milliseconds: 300),
+              layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
+                return Stack(
+                  children: <Widget>[
+                    ...previousChildren,
+                    if (currentChild != null) currentChild,
+                  ],
+                  alignment: Alignment.centerLeft,
+                );
+              }
+            ),
             backgroundColorStart: Theme.of(context).primaryColor,
             backgroundColorEnd: Theme.of(context).primaryColorDark,
             centerTitle: false,
@@ -52,7 +81,11 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
             actions: <Widget>[
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    isSearchActive = isSearchActive == true ? false : true;
+                  });
+                },
               ),
               IconButton(
                 icon: Icon(Icons.notifications),
