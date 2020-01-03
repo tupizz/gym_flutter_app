@@ -5,6 +5,7 @@ import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import './components/feed/feed.dart';
 import './components/favorites/favorites_page.dart';
 import './components/populars/populars_page.dart';
+import './components/articles/articles_page.dart';
 
 class TabPage extends StatefulWidget {
   TabPage({Key key}) : super(key: key);
@@ -94,9 +95,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
           FeedPage(),
           FavoritesPage(),
           PopularsPage(),
-          OtherTabPage(
-            title: "Articles",
-          )
+          ArticlesPage()
         ],
       ),
     );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gym_app/app/pages/splash-screen/splash_screen_page.dart';
 
 import './app/shared/utils/colors_utils.dart';
 import './app/pages/tabs/tabs_page.dart';
+import './app/pages/workout-detail/workout_detail_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,6 +23,7 @@ ThemeData buildDarkThemeData() {
   return baseTheme.copyWith(
       primaryColor: ColorUtils.hexToColor('#fa163f'),
       primaryColorDark: ColorUtils.hexToColor('#ff4d00'),
+      accentColor: ColorUtils.hexToColor('#f8b400'),
       textTheme: buildTextTheme(),
       scaffoldBackgroundColor: ColorUtils.hexToColor('#fafafa'));
 }
@@ -33,7 +36,9 @@ class MyApp extends StatelessWidget {
       theme: buildDarkThemeData(),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => TabPage(),
+        '/': (ctx) => SplashScreenPage(),
+        '/tabs': (ctx) => TabPage(),
+        WorkoutDetailPage.routeName: (ctx) => WorkoutDetailPage(),
       },
     );
   }
