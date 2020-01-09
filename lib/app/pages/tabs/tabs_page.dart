@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
@@ -16,6 +18,11 @@ class TabPage extends StatefulWidget {
 class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   TabController controller;
   bool isSearchActive = false;
+  Timer _debounce;
+
+  void doSearch(String query) {
+    debugPrint('Debounced call to search with query ${query}');
+  }
 
   @override
   void initState() {
@@ -46,34 +53,42 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
           ),
           child: GradientAppBar(
             title: AnimatedSwitcher(
-              child: isSearchActive
-                  ? TextField(
-                      decoration: InputDecoration(
-                          
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
+                child: isSearchActive
+                    ? TextField(
+                        style: new TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24),
+                              borderSide: BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
                             ),
-                          ),
-                          fillColor: Colors.white,
-                          filled: true,
-                          contentPadding: EdgeInsets.only(left: 16, right: 8),
-                          hintText: 'Enter a search term'),
-                    )
-                  : Text('Home'),
-              duration: Duration(milliseconds: 300),
-              layoutBuilder: (Widget currentChild, List<Widget> previousChildren) {
-                return Stack(
-                  children: <Widget>[
-                    ...previousChildren,
-                    if (currentChild != null) currentChild,
-                  ],
-                  alignment: Alignment.centerLeft,
-                );
-              }
-            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            contentPadding: EdgeInsets.only(left: 16, right: 8),
+                            hintText: 'Enter a search term'),
+                        onChanged: (value) {
+                          if (_debounce?.isActive ?? false) _debounce.cancel();
+                          _debounce =
+                              Timer(const Duration(milliseconds: 500), () {
+                              //  debugPrint(value);
+                              doSearch(value);
+                          });
+                        },
+                      )
+                    : Text('Home'),
+                duration: Duration(milliseconds: 300),
+                layoutBuilder:
+                    (Widget currentChild, List<Widget> previousChildren) {
+                  return Stack(
+                    children: <Widget>[
+                      ...previousChildren,
+                      if (currentChild != null) currentChild,
+                    ],
+                    alignment: Alignment.centerLeft,
+                  );
+                }),
             backgroundColorStart: Theme.of(context).primaryColor,
             backgroundColorEnd: Theme.of(context).primaryColorDark,
             centerTitle: false,
