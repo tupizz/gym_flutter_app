@@ -4,6 +4,7 @@ import 'package:gym_app/app/pages/splash-screen/splash_screen_page.dart';
 import './app/shared/utils/colors_utils.dart';
 import './app/pages/tabs/tabs_page.dart';
 import './app/pages/workout-detail/workout_detail_page.dart';
+import './app/pages/users/sign-in-page.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (ctx) => SplashScreenPage(),
         '/tabs': (ctx) => TabPage(),
+        '/signin': (ctx) => SignInPage(),
         WorkoutDetailPage.routeName: (ctx) => WorkoutDetailPage(),
       },
     );
