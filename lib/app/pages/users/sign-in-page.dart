@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gym_app/app/services/auth.service.dart';
 
 class BottomWaveClipper extends CustomClipper<Path> {
   @override
@@ -22,10 +24,11 @@ class BottomWaveClipper extends CustomClipper<Path> {
 
 //input widget
 Widget _input(Icon icon, String hint, TextEditingController controller,
-    bool obsecure, BuildContext context) {
+    bool obsecure, BuildContext context, bool enabled) {
   return Container(
     //padding: EdgeInsets.only(left: 20, right: 20),
     child: TextField(
+      enabled: enabled,
       controller: controller,
       obscureText: obsecure,
       style: TextStyle(fontSize: 20, color: Theme.of(context).primaryColor),
@@ -65,19 +68,35 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  bool _saving = false;
+
+  AuthService authService = new AuthService();
+
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
-  TextEditingController _nameController = new TextEditingController();
-  String _email;
-  String _password;
-  String _displayName;
+
   bool _obsecure = true;
 
   @override
   Widget build(BuildContext context) {
+    onPressed({email, password}) async {
+      setState(() {
+        _saving = true;
+      });
+      try {
+        AuthResult result =
+            await authService.signIn(email: email, password: password);
+        //debugPrint(result.toString());
+        Navigator.of(context).pushNamed('/tabs');
+      } catch (error) {
+        debugPrint(error.toString());
+      }
+      setState(() {
+        _saving = false;
+      });
+    }
+
     return Scaffold(
-      
         backgroundColor: Colors.white,
         body: Column(
           children: <Widget>[
@@ -87,12 +106,12 @@ class _SignInPageState extends State<SignInPage> {
             Padding(
               padding: EdgeInsets.all(10),
               child: _input(Icon(Icons.email), 'E-mail', _emailController,
-                  false, context),
+                  false, context, !_saving),
             ),
             Padding(
                 padding: EdgeInsets.all(10.0),
                 child: _input(Icon(Icons.email), 'Password',
-                    _passwordController, _obsecure, context)),
+                    _passwordController, _obsecure, context, !_saving)),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(10),
@@ -108,12 +127,19 @@ class _SignInPageState extends State<SignInPage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 onPressed: () {
-                  //function();
-                  debugPrint(
-                      '${_emailController.value.text} - ${_passwordController.value.text}');
+                  if (_saving) {
+                    return true;
+                  }
+
+                  onPressed(
+                      email: _emailController.value.text.trim().toLowerCase(),
+                      password: _passwordController.value.text.trim());
                 },
               ),
             ),
+            _saving ? Center(
+                      child: CircularProgressIndicator(backgroundColor: Theme.of(context).primaryColor,),
+                    ) : Container(),
             Expanded(
               child: Align(
                 child: ClipPath(
