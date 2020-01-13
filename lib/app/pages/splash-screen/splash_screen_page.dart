@@ -1,6 +1,6 @@
-import 'dart:async';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gym_app/app/services/auth.service.dart';
 
 class SplashScreenPage extends StatefulWidget {
   @override
@@ -8,13 +8,18 @@ class SplashScreenPage extends StatefulWidget {
 }
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
+
+  AuthService authService = new AuthService();
+
   @override
   void initState() {
     super.initState();
-    Timer(
-      Duration(seconds: 5),
-      () => Navigator.of(context).pushReplacementNamed('/tabs'),
-    );
+    authService.getUser().then( (onValue) {
+      if(onValue is FirebaseUser) {
+        return Navigator.of(context).pushReplacementNamed('/tabs');
+      }
+      Navigator.of(context).pushReplacementNamed('/users/signin');
+    });
   }
 
   @override
