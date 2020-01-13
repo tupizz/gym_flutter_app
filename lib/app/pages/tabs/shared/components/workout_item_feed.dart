@@ -3,11 +3,13 @@ import './../../../../models/workout.dart';
 
 class WorkoutItemFeed extends StatelessWidget {
   final Workout workout;
+  final Function callbackFavorite;
 
-  const WorkoutItemFeed(this.workout);
+  const WorkoutItemFeed(this.workout, this.callbackFavorite);
 
   @override
   Widget build(BuildContext context) {
+ 
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10.0),
@@ -70,7 +72,7 @@ class WorkoutItemFeed extends StatelessWidget {
                               icon: Icon(Icons.bookmark, size: 32.0,),
                               color: Theme.of(context).primaryColor,
                               onPressed: () {
-                                
+                                this.callbackFavorite(false);
                               }
                               ,
                             )
@@ -78,7 +80,7 @@ class WorkoutItemFeed extends StatelessWidget {
                               icon: Icon(Icons.bookmark_border, size: 32.0),
                               color: Theme.of(context).primaryColor,
                               onPressed: () {
-                                
+                                this.callbackFavorite(true);
                               }
                             ),
                     ),

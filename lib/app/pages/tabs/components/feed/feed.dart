@@ -77,7 +77,9 @@ class FeedPage extends StatelessWidget {
           child: ListView.builder(
             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
             itemBuilder: (BuildContext context, int index) {
-              return WorkoutItemFeed(workouts[index]);
+              return WorkoutItemFeed(workouts[index], (newStatus) {
+                debugPrint(newStatus);
+              });
             },
             itemCount: workouts.length,
           ),
