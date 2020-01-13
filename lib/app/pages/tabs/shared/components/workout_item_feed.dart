@@ -66,15 +66,20 @@ class WorkoutItemFeed extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50.0),
                       ),
                       child: this.workout.isFavorite
-                          ? Icon(
-                              Icons.bookmark,
-                              size: 32.0,
+                          ? IconButton(
+                              icon: Icon(Icons.bookmark, size: 32.0,),
                               color: Theme.of(context).primaryColor,
+                              onPressed: () {
+                                
+                              }
+                              ,
                             )
-                          : Icon(
-                              Icons.bookmark_border,
-                              size: 32.0,
+                          : IconButton(
+                              icon: Icon(Icons.bookmark_border, size: 32.0),
                               color: Theme.of(context).primaryColor,
+                              onPressed: () {
+                                
+                              }
                             ),
                     ),
                   ],
