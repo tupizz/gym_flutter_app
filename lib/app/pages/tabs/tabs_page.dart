@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:gym_app/app/services/auth.service.dart';
 
 import './components/feed/feed.dart';
 import './components/favorites/favorites_page.dart';
@@ -19,6 +20,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   TabController controller;
   bool isSearchActive = false;
   Timer _debounce;
+  
+  AuthService authService = new AuthService();
 
   void doSearch(String query) {
     debugPrint('Debounced call to search with query ${query}');
@@ -105,6 +108,14 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
               IconButton(
                 icon: Icon(Icons.notifications),
                 onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.exit_to_app),
+                onPressed: () {
+                  authService.logout().then( (onValue) {
+                    Navigator.of(context).pushNamed('/signin');
+                  });
+                },
               )
             ],
             bottom: TabBar(

@@ -2,26 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gym_app/app/services/auth.service.dart';
 
-class BottomWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.moveTo(size.width, 0.0);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0.0, size.height);
-    path.lineTo(0.0, size.height + 5);
-    var secondControlPoint = Offset(size.width - (size.width / 6), size.height);
-    var secondEndPoint = Offset(size.width, 0.0);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
-
 //input widget
 Widget _input(Icon icon, String hint, TextEditingController controller,
     bool obsecure, BuildContext context, bool enabled) {
@@ -60,20 +40,21 @@ Widget _input(Icon icon, String hint, TextEditingController controller,
   );
 }
 
-class SignInPage extends StatefulWidget {
-  SignInPage({Key key}) : super(key: key);
+class SignUpPage extends StatefulWidget {
+  SignUpPage({Key key}) : super(key: key);
 
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   bool _saving = false;
 
   AuthService authService = new AuthService();
 
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _confirmPasswordController = new TextEditingController();
 
   bool _obsecure = true;
 
@@ -85,9 +66,9 @@ class _SignInPageState extends State<SignInPage> {
       });
       try {
         AuthResult result =
-            await authService.signIn(email: email, password: password);
-        //debugPrint(result.toString());
-        Navigator.of(context).pushNamed('/tabs');
+            await authService.signUp(email: email, password: password);
+        debugPrint(result.toString());
+        Navigator.of(context).pushNamed('/signin');
       } catch (error) {
         debugPrint(error.toString());
       }
@@ -98,7 +79,8 @@ class _SignInPageState extends State<SignInPage> {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        body: Column(
+        body: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             SizedBox(
               height: 100,
@@ -112,6 +94,10 @@ class _SignInPageState extends State<SignInPage> {
                 padding: EdgeInsets.all(10.0),
                 child: _input(Icon(Icons.vpn_key), 'Password',
                     _passwordController, _obsecure, context, !_saving)),
+            Padding(
+                padding: EdgeInsets.all(10.0),
+                child: _input(Icon(Icons.vpn_key), 'Confirm Password',
+                    _confirmPasswordController, _obsecure, context, !_saving)),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(10),
@@ -123,46 +109,32 @@ class _SignInPageState extends State<SignInPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0)),
                 child: Text(
-                  "SIGN IN",
+                  "Sign up",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 onPressed: () {
+                  if(_passwordController.value.text != _confirmPasswordController.value.text) {
+                    return false;
+                  }
                   if (_saving) {
                     return true;
                   }
-
                   onPressed(
                       email: _emailController.value.text.trim().toLowerCase(),
                       password: _passwordController.value.text.trim());
                 },
               ),
             ),
-            _saving
-                ? Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Theme.of(context).primaryColor,
-                    ),
-                  )
-                : Container(),
-            Text("Don't have an account?", style: TextStyle(color: Colors.black),),
-            InkWell(
-                child: Text('Proceed to  sign up', style: TextStyle(color: Theme.of(context).primaryColor),),
+            _saving ? Center(
+                      child: CircularProgressIndicator(backgroundColor: Theme.of(context).primaryColor,),
+                    ) : Container(),
+            Center(child: InkWell(
+                child: Text('Already have an account?', style: TextStyle(color: Theme.of(context).primaryColor),),
                 onTap: () {
-                  Navigator.of(context).pushNamed('/signup');
+                  Navigator.of(context).pushNamed('/signin');
                 }
-            ),
-            Expanded(
-              child: Align(
-                child: ClipPath(
-                  child: Container(
-                    color: Theme.of(context).primaryColor,
-                    height: 400,
-                  ),
-                  clipper: BottomWaveClipper(),
-                ),
-                alignment: Alignment.bottomCenter,
-              ),
-            )
+            ))
+            
           ],
         ));
   }
