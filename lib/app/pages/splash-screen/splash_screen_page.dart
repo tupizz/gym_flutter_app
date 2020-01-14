@@ -18,7 +18,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       if(onValue is FirebaseUser) {
         return Navigator.of(context).pushReplacementNamed('/tabs');
       }
-      Navigator.of(context).pushReplacementNamed('/users/signin');
+      Navigator.of(context).pushReplacementNamed('/signin');
     });
   }
 
