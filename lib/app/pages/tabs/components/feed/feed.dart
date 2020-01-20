@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import './../../shared/components/workout_item_feed.dart';
 import './../../../../models/workout.dart';
@@ -71,9 +72,45 @@ class FeedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Column(
       children: <Widget>[
         Expanded(
+            child: StreamBuilder(
+          stream: Firestore.instance.collection('workouts').snapshots(),
+          builder: (BuildContext context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return Center(
+                  child: Text('Loading...'),
+                );
+              default:
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) {
+                    List rev = snapshot.data.documents.reversed.toList();
+                    var data = rev[index].data;
+                    Workout workout = Workout(id: 'bc066293-7d49-4676-814e-37e2e10eadf6',
+                      name: data['name'],
+                      description: data['description'],
+                      duration: data['duration'],
+                      imageUrl: data['imageUrl'],
+                      isFavorite: false,
+                      daysPerWeek: data['daysPerWeek'],
+                      type: data['split']);
+
+                    return WorkoutItemFeed(workout, (newStatus) {
+                      debugPrint(newStatus);
+                    });
+                  },
+                );
+            }
+          },
+        )
+            /*
           child: ListView.builder(
             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
             itemBuilder: (BuildContext context, int index) {
@@ -83,7 +120,8 @@ class FeedPage extends StatelessWidget {
             },
             itemCount: workouts.length,
           ),
-        ),
+          */
+            ),
       ],
     );
   }
