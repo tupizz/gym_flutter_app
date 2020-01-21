@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import './../../shared/components/workout_item_feed.dart';
 import './../../../../models/workout.dart';
 
+/*
 const workouts = [
   Workout(
     id: '1d85cfd1-35fa-425a-b939-56525f9c9f3f',
@@ -66,19 +67,19 @@ const workouts = [
     type: 'split',
   ),
 ];
+*/
 
 class FeedPage extends StatelessWidget {
   const FeedPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
 
     return Column(
       children: <Widget>[
         Expanded(
             child: StreamBuilder(
-          stream: Firestore.instance.collection('workouts').snapshots(),
+          stream: Firestore.instance.collection('workouts').getDocuments().asStream(),
           builder: (BuildContext context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -93,7 +94,8 @@ class FeedPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     List rev = snapshot.data.documents.reversed.toList();
                     var data = rev[index].data;
-                    Workout workout = Workout(id: 'bc066293-7d49-4676-814e-37e2e10eadf6',
+
+                    Workout workout = Workout(id: rev[index].documentID,
                       name: data['name'],
                       description: data['description'],
                       duration: data['duration'],

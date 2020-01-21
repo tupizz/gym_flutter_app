@@ -9,7 +9,7 @@ class WorkoutItemFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
+    
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10.0),
