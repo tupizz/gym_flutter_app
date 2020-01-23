@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  //FirebaseUser currentUser;
+
   ///
   /// return the Future with firebase user object FirebaseUser if one exists
   ///
@@ -26,6 +28,8 @@ class AuthService with ChangeNotifier {
       var result = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       // since something changed, let's notify the listeners...
+
+      //this.currentUser = result.user;
       notifyListeners();
       return result;
     }  catch (e) {
