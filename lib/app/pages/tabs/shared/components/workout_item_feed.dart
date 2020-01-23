@@ -1,11 +1,65 @@
 import 'package:flutter/material.dart';
-import './../../../../models/workout.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gym_app/app/models/workout.dart';
 
-class WorkoutItemFeed extends StatelessWidget {
+class WorkoutItemFeed extends StatefulWidget {
   final Workout workout;
-  final Function callbackFavorite;
+  
+  WorkoutItemFeed({Key key, this.workout}) : super(key: key);
 
-  const WorkoutItemFeed(this.workout, this.callbackFavorite);
+  @override
+  _WorkoutItemFeedState createState() => _WorkoutItemFeedState(workout);
+}
+
+class _WorkoutItemFeedState extends State<WorkoutItemFeed> {
+
+  final Workout workout;
+
+  _WorkoutItemFeedState(this.workout);
+
+  bool _favorite = false;
+  String _uid = null;
+
+
+  @override
+  void initState() { 
+    super.initState();
+    
+    FirebaseAuth.instance.currentUser().then((onValue) {
+      
+      Firestore.instance.collection('favorites').document('workouts').collection(onValue.uid).document(workout.id).get().then((favoriteValue) {
+       
+        setState(() {
+          _uid = onValue.uid.toString();
+          _favorite = favoriteValue != null ? true : false;
+
+        });
+      });
+    });
+
+  }
+
+  toggleFavorite(status) {
+    
+    if(status) {
+
+      Firestore.instance.collection('favorites').document('workouts').collection(_uid).document(workout.id).delete()
+      .then( (onValue) {
+        setState(() {
+          _favorite = false;
+        });
+      });
+    } else {
+   
+      Firestore.instance.collection('favorites').document('workouts').collection(_uid).document(workout.id).setData({ "favorited": true })
+      .then((onValue) {
+        setState(() {
+          _favorite = true;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +96,7 @@ class WorkoutItemFeed extends StatelessWidget {
                   ),
                   child: Row(
                     children: <Widget>[
+                      /*
                       Hero(
                         tag: 'imageHero${this.workout.id}',
                         child: Image(
@@ -51,6 +106,7 @@ class WorkoutItemFeed extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
+                      */
                     ],
                   ),
                 ),
@@ -67,22 +123,21 @@ class WorkoutItemFeed extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(50.0),
                       ),
-                      child: this.workout.isFavorite
-                          ? IconButton(
-                              icon: Icon(Icons.bookmark, size: 32.0,),
-                              color: Theme.of(context).primaryColor,
-                              onPressed: () {
-                                this.callbackFavorite(false);
-                              }
-                              ,
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.bookmark_border, size: 32.0),
-                              color: Theme.of(context).primaryColor,
-                              onPressed: () {
-                                this.callbackFavorite(true);
-                              }
-                            ),
+                      child: _favorite ?
+                        IconButton(
+                            icon: Icon(Icons.bookmark, size: 32.0,),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              toggleFavorite(true);
+                            },
+                          )
+                        : IconButton(
+                            icon: Icon(Icons.bookmark_border, size: 32.0),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              toggleFavorite(false);
+                            }
+                          )
                     ),
                   ],
                 ),
@@ -123,4 +178,5 @@ class WorkoutItemFeed extends StatelessWidget {
       ),
     );
   }
+  
 }

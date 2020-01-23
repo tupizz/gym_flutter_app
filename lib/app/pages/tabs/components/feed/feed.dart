@@ -104,9 +104,7 @@ class FeedPage extends StatelessWidget {
                       daysPerWeek: data['daysPerWeek'],
                       type: data['split']);
 
-                    return WorkoutItemFeed(workout, (newStatus) {
-                      debugPrint(newStatus);
-                    });
+                    return WorkoutItemFeed(workout: workout);
                   },
                 );
             }
